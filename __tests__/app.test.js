@@ -62,7 +62,7 @@ describe.only("GET /api/articles/:article_id", () => {
       .get("/api/articles/7")
       .expect(200)
       .then((response) => {
-        const article = response.body;
+        const { article } = response.body;
         console.log(article);
         expect(article.title).toBe("Using React Native: One Year Later");
         expect(article.topic).toBe("coding");
