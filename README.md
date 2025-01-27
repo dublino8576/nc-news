@@ -8,7 +8,7 @@ If you only wish to have access to the dev database please follow these steps:
 
 1. Fork this repository on your profile.
 
-2. Open your local terminal in your preferred CLI. Make sure you are in your Home directory and type in the terminal git clone URL.
+2. Open your local terminal in your preferred CLI. Make sure you are in your Home directory and type in the terminal git clone URL-of-your-nc-news-repo.
 
 3. Move inside the main directory of the repository. Remember: your filepath on the terminal should end with /be-nc-news
 
