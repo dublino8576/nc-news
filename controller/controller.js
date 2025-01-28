@@ -13,7 +13,11 @@ exports.getAllTopics = (request, response, next) => {
 
 exports.getArticleById = (request, response, next) => {
   const { article_id } = request.params;
-  return selectArticleById(article_id).then((article) => {
-    response.status(200).send({ article: article });
-  });
+  return selectArticleById(article_id)
+    .then((article) => {
+      response.status(200).send({ article: article });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
