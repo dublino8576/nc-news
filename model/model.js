@@ -1,5 +1,8 @@
 const db = require("../db/connection");
-const { convertTimestampToDate } = require("../db/seeds/utils");
+const {
+  convertTimestampToDate,
+  checkArticleIdExists,
+} = require("../db/seeds/utils");
 
 exports.selectAllTopics = (request, response, next) => {
   return db.query(`SELECT * FROM topics;`).then((topics) => {
@@ -43,5 +46,18 @@ ORDER BY
     )
     .then((result) => {
       return result.rows;
+    });
+};
+
+exports.selectCommentsByArticleId = (article_id) => {
+  return checkArticleIdExists(article_id)
+    .then(() => {
+      return db.query(
+        `SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC;`,
+        [article_id]
+      );
+    })
+    .then((response) => {
+      return response.rows;
     });
 };

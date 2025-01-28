@@ -4,6 +4,7 @@ const {
   getAllTopics,
   getArticleById,
   getArticles,
+  getCommentsByArticleId,
 } = require("./controller/controller");
 const endpointsJson = require("./endpoints.json");
 
@@ -19,6 +20,8 @@ app.get("/api/topics", getAllTopics);
 app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles", getArticles);
+
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 // >>>> non existent endpoints & middleware error handling section
 
