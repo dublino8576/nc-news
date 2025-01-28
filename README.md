@@ -18,6 +18,8 @@ If you only wish to have access to the dev database please follow these steps:
 
 6. Once done this please run the command npm i. This will install the packages you need to run this API. To make sure the environment variables are working install dotenv program by typing install dotenv.
 
+---
+
 If you wish to have access to the test database please follow these steps:
 
 1. Follow steps 1-4 but at step 4 create a file of .env.test and choose on step 5 the correct database name ending in \_test.
