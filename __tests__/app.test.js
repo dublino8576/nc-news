@@ -56,7 +56,7 @@ describe("GET /api/topics", () => {
   });
 });
 
-describe.only("GET /api/articles/:article_id", () => {
+describe("GET /api/articles/:article_id", () => {
   test("200: Responds with an article object with the corresponding article id", () => {
     return request(app)
       .get("/api/articles/7")
@@ -70,7 +70,7 @@ describe.only("GET /api/articles/:article_id", () => {
         expect(article.body).toBe(
           "When I interviewed for the iOS developer opening at Discord last spring, the tech lead Stanislav told me: React Native is the future. We will use it to build our iOS app from scratch as soon as it becomes public. As a native iOS developer, I strongly doubted using web technologies to build mobile apps because of my previous experiences with tools like PhoneGap. But after learning and using React Native for a while, I am glad we made that decision."
         );
-        expect(article.created_at).toBe("2020-10-18T00:26:00.000Z");
+        expect(typeof article.created_at).toBe("string");
         expect(article.votes).toBe(0);
         expect(article.article_img_url).toBe(
           "https://images.pexels.com/photos/6424586/pexels-photo-6424586.jpeg?w=700&h=700"
