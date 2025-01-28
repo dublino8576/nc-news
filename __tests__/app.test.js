@@ -8,7 +8,7 @@ const index = require("../db/data/test-data/index");
 const { getArticleById } = require("../controller/controller");
 /* Set up your beforeEach & afterAll functions here */
 beforeEach(() => {
-  index;
+  return seed(index);
 });
 afterAll(() => db.end());
 describe("GET /api", () => {
@@ -63,17 +63,14 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then((response) => {
         const { article } = response.body;
-        console.log(article);
-        expect(article.title).toBe("Using React Native: One Year Later");
-        expect(article.topic).toBe("coding");
-        expect(article.author).toBe("tickle122");
-        expect(article.body).toBe(
-          "When I interviewed for the iOS developer opening at Discord last spring, the tech lead Stanislav told me: React Native is the future. We will use it to build our iOS app from scratch as soon as it becomes public. As a native iOS developer, I strongly doubted using web technologies to build mobile apps because of my previous experiences with tools like PhoneGap. But after learning and using React Native for a while, I am glad we made that decision."
-        );
+        expect(article.title).toBe("Z");
+        expect(article.topic).toBe("mitch");
+        expect(article.author).toBe("icellusedkars");
+        expect(article.body).toBe("I was hungry.");
         expect(typeof article.created_at).toBe("string");
         expect(article.votes).toBe(0);
         expect(article.article_img_url).toBe(
-          "https://images.pexels.com/photos/6424586/pexels-photo-6424586.jpeg?w=700&h=700"
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
         );
         expect(article).toEqual(article);
       });
@@ -86,13 +83,52 @@ describe("GET /api/articles/:article_id", () => {
         expect(response.body.error).toBe("Bad request");
       });
   });
-  test("404: Responds with an error message of Endpoint not found", () => {
+  test("404: Responds with an error message of ID not found", () => {
     return request(app)
       .get("/api/articles/400")
       .expect(404)
       .then((response) => {
         const error = response.body;
-        expect(error).toEqual({ error: "Endpoint not found" });
+        expect(error).toEqual({ error: "ID number not found" });
+      });
+  });
+});
+
+describe("GET /api/articles", () => {
+  test("200: Responds with an articles array of article objects, each of which should have author, title, article_id, topic, created_at, votes, article_img_url, comment_count. it should not have a property of body and it should be ordered in DESC order by date of article", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(Array.isArray(articles));
+        expect(articles.length).toBe(13);
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+          expect(article).toEqual(
+            expect.not.objectContaining({
+              body: expect.any(String),
+            })
+          );
+        });
+        expect(articles).toEqual(articles);
+        expect(articles).toBeSorted({ key: "created_at", descending: true });
+      });
+  });
+  test("404: Responds with an error message of 'Endpoint not found'", () => {
+    return request(app)
+      .get("/api/article")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.error).toBe("Endpoint not found");
       });
   });
 });
