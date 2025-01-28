@@ -2,8 +2,11 @@ const {
   convertTimestampToDate,
   createRef,
   formatComments,
+  checkArticleIdExists,
 } = require("../db/seeds/utils");
+const db = require("../db/connection");
 
+afterAll(() => db.end());
 describe("convertTimestampToDate", () => {
   test("returns a new object", () => {
     const timestamp = 1557572706232;
@@ -100,5 +103,19 @@ describe("formatComments", () => {
     const comments = [{ created_at: timestamp }];
     const formattedComments = formatComments(comments, {});
     expect(formattedComments[0].created_at).toEqual(new Date(timestamp));
+  });
+});
+
+describe("checkArticleIdExists()", () => {
+  test("should resolve if article exists", () => {
+    return expect(checkArticleIdExists(2)).resolves.toMatch(
+      "Article_id exists"
+    );
+  });
+  test("should reject if article does not exists", () => {
+    return expect(checkArticleIdExists(400)).rejects.toMatchObject({
+      status: 404,
+      error: "ID number not found",
+    });
   });
 });

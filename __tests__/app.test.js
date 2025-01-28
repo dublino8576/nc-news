@@ -132,3 +132,55 @@ describe("GET /api/articles", () => {
       });
   });
 });
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: Responds with an array of comments for the given article_id ordered by newer comments first. Each comment to have properties of body, article_id, author, comment_id, created_at and votes", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body: comments }) => {
+        expect(Array.isArray(comments.comments)).toBe(true);
+        expect(comments.comments.length).toBe(11);
+        comments.comments.forEach((comment) => {
+          expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            article_id: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+          });
+        });
+        expect(comments).toEqual(comments);
+        expect(comments.comments).toBeSorted({
+          key: "created_at",
+          descending: true,
+        });
+      });
+  });
+  test("200: Responds with an empty array of comments when article doesn't have any comments on it'", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then(({ body: comments }) => {
+        expect(comments.comments.length).toBe(0);
+        expect(comments).toEqual(comments);
+      });
+  });
+  test("400: Responds with a message of 'Bad request'", () => {
+    return request(app)
+      .get("/api/articles/notanumber/comments")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.error).toBe("Bad request");
+      });
+  });
+  test("404: Responds with a message of 'ID number not found'", () => {
+    return request(app)
+      .get("/api/articles/265/comments")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.error).toBe("ID number not found");
+      });
+  });
+});
