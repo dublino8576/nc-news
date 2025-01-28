@@ -25,5 +25,21 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "gives an object of article with the corresponding article_id",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "article_id": 7,
+        "title": "Using React Native: One Year Later",
+        "topic": "coding",
+        "author": "tickle122",
+        "body": "When I interviewed for the iOS developer opening at Discord last spring, the tech lead Stanislav told me: React Native is the future. We will use it to build our iOS app from scratch as soon as it becomes public. As a native iOS developer, I strongly doubted using web technologies to build mobile apps because of my previous experiences with tools like PhoneGap. But after learning and using React Native for a while, I am glad we made that decision.",
+        "created_at": "2020-10-18T00:26:00.000Z",
+        "votes": 0,
+        "article_img_url": "https://images.pexels.com/photos/6424586/pexels-photo-6424586.jpeg?w=700&h=700"
+      }
+    }
   }
 }

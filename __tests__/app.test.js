@@ -12,7 +12,7 @@ beforeEach(() => {
 });
 afterAll(() => db.end());
 describe("GET /api", () => {
-  test("200: Responds with an object detailing the documentation for each endpoint", () => {
+  test.only("200: Responds with an object detailing the documentation for each endpoint", () => {
     return request(app)
       .get("/api")
       .expect(200)
@@ -57,7 +57,7 @@ describe("GET /api/topics", () => {
 });
 
 describe("GET /api/articles/:article_id", () => {
-  test("200: Responds with an article object with the corresponding article id", () => {
+  test.only("200: Responds with an article object with the corresponding article id", () => {
     return request(app)
       .get("/api/articles/7")
       .expect(200)
