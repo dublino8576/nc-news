@@ -231,3 +231,41 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: Responds with the updated article ", () => {
+    return request(app)
+      .patch("/api/articles/7")
+      .send({ inc_votes: -50 })
+      .expect(200)
+      .then(({ body: { updatedArticle } }) => {
+        expect(updatedArticle.article_id).toBe(7);
+        expect(updatedArticle.title).toBe("Z");
+        expect(updatedArticle.topic).toBe("mitch");
+        expect(updatedArticle.author).toBe("icellusedkars");
+        expect(updatedArticle.body).toBe("I was hungry.");
+        expect(typeof updatedArticle.created_at).toBe("string");
+        expect(updatedArticle.votes).toBe(-50);
+        expect(updatedArticle.article_img_url).toBe(
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        );
+      });
+  });
+
+  test("400: Responds with a message of Wrong data type in the URL", () => {
+    return request(app)
+      .patch("/api/articles/notThis")
+      .expect(400)
+      .then(({ body: { error } }) => {
+        expect(error).toBe("Wrong data type in the URL");
+      });
+  });
+  test("404: Responds with a message of Wrong data type in the URL", () => {
+    return request(app)
+      .patch("/api/articles/86")
+      .expect(404)
+      .then(({ body: { error } }) => {
+        expect(error).toBe("ID number not found");
+      });
+  });
+});
