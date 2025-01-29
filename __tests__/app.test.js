@@ -269,3 +269,25 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: Responds with the code number 204 and no content", () => {
+    return request(app).delete("/api/comments/5").expect(204);
+  });
+  test("400: Responds with error of 'Wrong data type in the URL'", () => {
+    return request(app)
+      .delete("/api/comments/notThis")
+      .expect(400)
+      .then(({ body: { error } }) => {
+        expect(error).toBe("Wrong data type in the URL");
+      });
+  });
+  test("404: Responds with error of 'ID number not found'", () => {
+    return request(app)
+      .delete("/api/comments/99")
+      .expect(404)
+      .then(({ body: { error } }) => {
+        expect(error).toBe("ID number not found");
+      });
+  });
+});

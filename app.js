@@ -7,6 +7,7 @@ const {
   getCommentsByArticleId,
   postComment,
   updateArticle,
+  deleteCommentById,
 } = require("./controller/controller");
 const endpointsJson = require("./endpoints.json");
 
@@ -29,6 +30,7 @@ app.post("/api/articles/:article_id/comments", postComment);
 
 app.patch("/api/articles/:article_id", updateArticle);
 
+app.delete("/api/comments/:comment_id", deleteCommentById);
 // >>>> non existent endpoints & middleware error handling section
 
 app.all("*", (request, response) => {
