@@ -53,6 +53,8 @@ app.use((error, request, response, next) => {
     response.status(404).send({ error: "ID number not found" });
   } else if (error.status === 404 && error.error === "User not found") {
     response.status(404).send({ error: "User not found" });
+  } else if (error.status === 404 && error.error === "Query not found") {
+    response.status(404).send({ error: "Query not found" });
   } else {
     next(error);
   }

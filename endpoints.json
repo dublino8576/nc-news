@@ -10,7 +10,7 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all articles",
+    "description": "serves an array of all articles. The articles can be ordered by default in descendent order by date. Otherwise they can be sorted by any other property of the article object, both in ascendent and descendent order",
     "queries": ["author", "topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [

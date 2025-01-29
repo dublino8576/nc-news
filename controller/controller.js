@@ -31,9 +31,12 @@ exports.getArticleById = (request, response, next) => {
 };
 
 exports.getArticles = (request, response, next) => {
-  return selectArticles()
+  //make a variable for each query and then make a greenlist
+  const { sort_by } = request.query;
+  const { order } = request.query;
+  return selectArticles(sort_by, order)
     .then((articles) => {
-      response.status(200).send({ articles: articles });
+      response.status(200).send({ articles });
     })
     .catch((err) => {
       next(err);
