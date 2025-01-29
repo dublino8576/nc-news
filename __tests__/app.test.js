@@ -72,15 +72,14 @@ describe("GET /api/articles/:article_id", () => {
         expect(article.article_img_url).toBe(
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
         );
-        expect(article).toEqual(article);
       });
   });
   test('400: Responds with error message of "Bad request"', () => {
     return request(app)
       .get("/api/articles/notThis")
       .expect(400)
-      .then(({ body: error }) => {
-        expect(error.error).toBe("Wrong data type in the URL");
+      .then(({ body: { error } }) => {
+        expect(error).toBe("Wrong data type in the URL");
       });
   });
   test("404: Responds with an error message of ID not found", () => {
@@ -119,7 +118,6 @@ describe("GET /api/articles", () => {
             })
           );
         });
-        expect(articles).toEqual(articles);
         expect(articles).toBeSorted({ key: "created_at", descending: true });
       });
   });
@@ -127,8 +125,8 @@ describe("GET /api/articles", () => {
     return request(app)
       .get("/api/article")
       .expect(404)
-      .then((response) => {
-        expect(response.body.error).toBe("Endpoint not found");
+      .then(({ body: { error } }) => {
+        expect(error).toBe("Endpoint not found");
       });
   });
 });
@@ -138,10 +136,9 @@ describe("GET /api/articles/:article_id/comments", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
-      .then(({ body: comments }) => {
-        expect(Array.isArray(comments.comments)).toBe(true);
-        expect(comments.comments.length).toBe(11);
-        comments.comments.forEach((comment) => {
+      .then(({ body: { comments } }) => {
+        expect(comments.length).toBe(11);
+        comments.forEach((comment) => {
           expect(comment).toMatchObject({
             comment_id: expect.any(Number),
             votes: expect.any(Number),
@@ -151,8 +148,7 @@ describe("GET /api/articles/:article_id/comments", () => {
             body: expect.any(String),
           });
         });
-        expect(comments).toEqual(comments);
-        expect(comments.comments).toBeSorted({
+        expect(comments).toBeSorted({
           key: "created_at",
           descending: true,
         });
@@ -162,17 +158,16 @@ describe("GET /api/articles/:article_id/comments", () => {
     return request(app)
       .get("/api/articles/2/comments")
       .expect(200)
-      .then(({ body: comments }) => {
-        expect(comments.comments.length).toBe(0);
-        expect(comments).toEqual(comments);
+      .then(({ body: { comments } }) => {
+        expect(comments.length).toBe(0);
       });
   });
   test("400: Responds with a message of 'Bad request'", () => {
     return request(app)
       .get("/api/articles/notanumber/comments")
       .expect(400)
-      .then(({ body: error }) => {
-        expect(error.error).toBe("Wrong data type in the URL");
+      .then(({ body: { error } }) => {
+        expect(error).toBe("Wrong data type in the URL");
       });
   });
   test("404: Responds with a message of 'ID number not found'", () => {
@@ -214,8 +209,8 @@ describe("POST /api/articles/:article_id/comments", () => {
         username: "icellusedkars",
       })
       .expect(404)
-      .then(({ body: error }) => {
-        expect(error.error).toBe("ID number not found");
+      .then(({ body: { error } }) => {
+        expect(error).toBe("ID number not found");
       });
   });
   test('404: Responds with a message of "User not found"', () => {
@@ -226,8 +221,8 @@ describe("POST /api/articles/:article_id/comments", () => {
         username: "bambolino65",
       })
       .expect(404)
-      .then(({ body: error }) => {
-        expect(error.error).toBe("User not found");
+      .then(({ body: { error } }) => {
+        expect(error).toBe("User not found");
       });
   });
 });
@@ -288,6 +283,32 @@ describe("DELETE /api/comments/:comment_id", () => {
       .expect(404)
       .then(({ body: { error } }) => {
         expect(error).toBe("ID number not found");
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("200: Responds with an array of user objects with username, name and avatar_url properties ", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        expect(users.length).toBe(4);
+        users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+      });
+  });
+  test("404: Responds with an error of 'Endpoint not found'", () => {
+    return request(app)
+      .get("/api/user")
+      .expect(404)
+      .then(({ body: { error } }) => {
+        expect(error).toBe("Endpoint not found");
       });
   });
 });

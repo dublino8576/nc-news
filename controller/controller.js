@@ -6,6 +6,7 @@ const {
   insertComment,
   patchArticleVotes,
   removeCommentById,
+  selectUsers,
 } = require("../model/model");
 
 exports.getAllTopics = (request, response, next) => {
@@ -81,6 +82,16 @@ exports.deleteCommentById = (request, response, next) => {
   return removeCommentById(comment_id)
     .then(() => {
       response.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getUsers = (request, response, next) => {
+  return selectUsers()
+    .then((users) => {
+      response.status(200).send({ users });
     })
     .catch((err) => {
       next(err);
