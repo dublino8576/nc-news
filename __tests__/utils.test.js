@@ -121,7 +121,7 @@ describe("checkArticleIdExists()", () => {
   });
 });
 
-describe.only("checkUserExists", () => {
+describe("checkUserExists()", () => {
   test("should resolve if username exists", () => {
     return expect(checkUserExists("icellusedkars")).resolves.toMatch(
       "Username exists."

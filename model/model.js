@@ -66,6 +66,7 @@ exports.selectCommentsByArticleId = (article_id) => {
 exports.insertComment = (body, username, article_id) => {
   return checkArticleIdExists(article_id).then(() => {
     return checkUserExists(username).then(() => {
+      console.log("in am running");
       //default keys are automatically added with default keyword
       return db
         .query(
