@@ -100,5 +100,18 @@
     "description": "deletes a comment by its comment_id",
     "queries": [],
     "exampleResponse": ""
+  },
+  "GET /api/users": {
+    "description": "serves all the users in the database",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "butter_bridge",
+          "name": "jonny",
+          "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        }
+      ]
+    }
   }
 }
