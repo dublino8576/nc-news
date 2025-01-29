@@ -99,7 +99,6 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body: { articles } }) => {
-        expect(Array.isArray(articles));
         expect(articles.length).toBe(13);
         articles.forEach((article) => {
           expect(article).toMatchObject({
@@ -121,6 +120,24 @@ describe("GET /api/articles", () => {
         expect(articles).toBeSorted({ key: "created_at", descending: true });
       });
   });
+  test("200: Responds with an array of article objects which are sorted by any given property", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBe(13);
+        expect(articles).toBeSorted({ key: "title", descending: true });
+      });
+  });
+  test("200: Responds with an array of article objects which are sorted by any given property by optional ascendent order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author&order=ASC")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBe(13);
+        expect(articles).toBeSorted({ key: "author" });
+      });
+  });
   test("404: Responds with an error message of 'Endpoint not found'", () => {
     return request(app)
       .get("/api/article")
@@ -129,6 +146,15 @@ describe("GET /api/articles", () => {
         expect(error).toBe("Endpoint not found");
       });
   });
+});
+
+test('404: Responds with an error of message "Query not found"', () => {
+  return request(app)
+    .get("/api/articles?sort_by=mammino&order=notThis")
+    .expect(404)
+    .then(({ body: { error } }) => {
+      expect(error).toBe("Query not found");
+    });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {

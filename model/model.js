@@ -22,10 +22,21 @@ exports.selectArticleById = (article_id) => {
     });
 };
 
-exports.selectArticles = () => {
-  return db
-    .query(
-      `SELECT 
+exports.selectArticles = (sort_by, order) => {
+  const greenList = [
+    "author",
+    "title",
+    "article_id",
+    "topic",
+    "created_at",
+    "votes",
+    "article_img_url",
+    "comment_count",
+    "ASC",
+    "DESC",
+  ];
+  let queryArgs = [];
+  let sqlQueryString = `SELECT 
     articles.article_id,
     articles.title,
     articles.topic,
@@ -41,13 +52,33 @@ LEFT JOIN
 ON 
     articles.article_id = comments.article_id
 GROUP BY 
-    articles.article_id
-ORDER BY 
-    articles.created_at DESC;`
-    )
-    .then((result) => {
-      return result.rows;
-    });
+    articles.article_id`;
+  if (sort_by) {
+    if (greenList.includes(sort_by)) {
+      sqlQueryString += ` ORDER BY articles.${sort_by}`;
+      queryArgs.push(sort_by);
+    } else {
+      return Promise.reject({ status: 404, error: "Query not found" });
+    }
+  }
+  if (order) {
+    if (greenList.includes(order)) {
+      sqlQueryString += ` ${order}`;
+      queryArgs.push(order);
+    } else {
+      return Promise.reject({ status: 404, error: "Query not found" });
+    }
+  }
+  if (!sort_by) {
+    sqlQueryString += ` ORDER BY articles.created_at`;
+  }
+  if (!order) {
+    sqlQueryString += ` DESC;`;
+  }
+
+  return db.query(sqlQueryString).then(({ rows }) => {
+    return rows;
+  });
 };
 
 exports.selectCommentsByArticleId = (article_id) => {
