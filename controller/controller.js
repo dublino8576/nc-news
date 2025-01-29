@@ -4,6 +4,7 @@ const {
   selectArticles,
   selectCommentsByArticleId,
   insertComment,
+  patchArticleVotes,
 } = require("../model/model");
 
 exports.getAllTopics = (request, response, next) => {
@@ -56,6 +57,18 @@ exports.postComment = (request, response, next) => {
   return insertComment(body, username, article_id)
     .then((insertedComment) => {
       response.status(201).send({ newComment: insertedComment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.updateArticle = (request, response, next) => {
+  const { inc_votes } = request.body;
+  const { article_id } = request.params;
+  return patchArticleVotes(article_id, inc_votes)
+    .then((updatedArticle) => {
+      response.status(200).send({ updatedArticle });
     })
     .catch((err) => {
       next(err);

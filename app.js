@@ -6,6 +6,7 @@ const {
   getArticles,
   getCommentsByArticleId,
   postComment,
+  updateArticle,
 } = require("./controller/controller");
 const endpointsJson = require("./endpoints.json");
 
@@ -25,6 +26,8 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.post("/api/articles/:article_id/comments", postComment);
+
+app.patch("/api/articles/:article_id", updateArticle);
 
 // >>>> non existent endpoints & middleware error handling section
 
