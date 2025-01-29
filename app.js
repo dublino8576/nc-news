@@ -5,6 +5,7 @@ const {
   getArticleById,
   getArticles,
   getCommentsByArticleId,
+  postComment,
 } = require("./controller/controller");
 const endpointsJson = require("./endpoints.json");
 
@@ -23,6 +24,8 @@ app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
+app.post("/api/articles/:article_id/comments", postComment);
+
 // >>>> non existent endpoints & middleware error handling section
 
 app.all("*", (request, response) => {
@@ -30,7 +33,7 @@ app.all("*", (request, response) => {
 });
 app.use((error, request, response, next) => {
   if (error.code === "22P02") {
-    response.status(400).send({ error: "Bad request" });
+    response.status(400).send({ error: "Wrong data type in the URL" });
   } else {
     next(error);
   }
@@ -39,6 +42,8 @@ app.use((error, request, response, next) => {
 app.use((error, request, response, next) => {
   if (error.status === 404 && error.error === "ID number not found") {
     response.status(404).send({ error: "ID number not found" });
+  } else if (error.status === 404 && error.error === "User not found") {
+    response.status(404).send({ error: "User not found" });
   } else {
     next(error);
   }

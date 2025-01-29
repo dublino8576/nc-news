@@ -79,8 +79,8 @@ describe("GET /api/articles/:article_id", () => {
     return request(app)
       .get("/api/articles/notThis")
       .expect(400)
-      .then((response) => {
-        expect(response.body.error).toBe("Bad request");
+      .then(({ body: error }) => {
+        expect(error.error).toBe("Wrong data type in the URL");
       });
   });
   test("404: Responds with an error message of ID not found", () => {
@@ -171,8 +171,8 @@ describe("GET /api/articles/:article_id/comments", () => {
     return request(app)
       .get("/api/articles/notanumber/comments")
       .expect(400)
-      .then((response) => {
-        expect(response.body.error).toBe("Bad request");
+      .then(({ body: error }) => {
+        expect(error.error).toBe("Wrong data type in the URL");
       });
   });
   test("404: Responds with a message of 'ID number not found'", () => {
@@ -181,6 +181,53 @@ describe("GET /api/articles/:article_id/comments", () => {
       .expect(404)
       .then((response) => {
         expect(response.body.error).toBe("ID number not found");
+      });
+  });
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: Responds with the posted comments that has been added to the article", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({
+        body: "I have to say I find this info interesting!!!",
+        username: "icellusedkars",
+      })
+      .expect(201)
+      .then(({ body: { newComment } }) => {
+        //controller returns a response body of newComment object and we destructure it to make the response body be called newComment. The names of newComment have to match to work
+        expect(newComment.comment_id).toBe(19);
+        expect(newComment.author).toBe("icellusedkars");
+        expect(newComment.body).toBe(
+          "I have to say I find this info interesting!!!"
+        );
+        expect(newComment.article_id).toBe(1);
+        expect(typeof newComment.created_at).toBe("string");
+        expect(newComment.votes).toBe(0);
+      });
+  });
+  test("404: Responds with a message of ID number not found", () => {
+    return request(app)
+      .post("/api/articles/265/comments")
+      .send({
+        body: "I have to say I find this info interesting!!!",
+        username: "icellusedkars",
+      })
+      .expect(404)
+      .then(({ body: error }) => {
+        expect(error.error).toBe("ID number not found");
+      });
+  });
+  test('404: Responds with a message of "User not found"', () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({
+        body: "I have to say I find this info interesting!!!",
+        username: "bambolino65",
+      })
+      .expect(404)
+      .then(({ body: error }) => {
+        expect(error.error).toBe("User not found");
       });
   });
 });
