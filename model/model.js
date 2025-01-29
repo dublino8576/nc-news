@@ -88,3 +88,19 @@ exports.patchArticleVotes = (article_id, inc_votes) => {
     return article;
   });
 };
+
+exports.removeCommentById = (comment_id) => {
+  return db
+    .query(
+      `DELETE FROM comments
+    WHERE comment_id = $1`,
+      [comment_id]
+    )
+    .then((response) => {
+      //if rowCount is 1 then comment is deleted
+      const deletedComments = response.rowCount;
+      if (deletedComments === 0) {
+        return Promise.reject({ status: 404, error: "ID number not found" });
+      }
+    });
+};

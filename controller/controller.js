@@ -5,6 +5,7 @@ const {
   selectCommentsByArticleId,
   insertComment,
   patchArticleVotes,
+  removeCommentById,
 } = require("../model/model");
 
 exports.getAllTopics = (request, response, next) => {
@@ -69,6 +70,17 @@ exports.updateArticle = (request, response, next) => {
   return patchArticleVotes(article_id, inc_votes)
     .then((updatedArticle) => {
       response.status(200).send({ updatedArticle });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.deleteCommentById = (request, response, next) => {
+  const { comment_id } = request.params;
+  return removeCommentById(comment_id)
+    .then(() => {
+      response.status(204).send();
     })
     .catch((err) => {
       next(err);
