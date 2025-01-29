@@ -3,6 +3,7 @@ const {
   createRef,
   formatComments,
   checkArticleIdExists,
+  checkUserExists,
 } = require("../db/seeds/utils");
 const db = require("../db/connection");
 
@@ -116,6 +117,20 @@ describe("checkArticleIdExists()", () => {
     return expect(checkArticleIdExists(400)).rejects.toMatchObject({
       status: 404,
       error: "ID number not found",
+    });
+  });
+});
+
+describe.only("checkUserExists", () => {
+  test("should resolve if username exists", () => {
+    return expect(checkUserExists("icellusedkars")).resolves.toMatch(
+      "Username exists."
+    );
+  });
+  test("should reject promise if username does not exist", () => {
+    return expect(checkUserExists("bambolino65")).rejects.toMatchObject({
+      status: 404,
+      error: "User not found",
     });
   });
 });

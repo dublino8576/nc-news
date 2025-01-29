@@ -2,6 +2,7 @@ const db = require("../db/connection");
 const {
   convertTimestampToDate,
   checkArticleIdExists,
+  checkUserExists,
 } = require("../db/seeds/utils");
 
 exports.selectAllTopics = (request, response, next) => {
@@ -60,4 +61,23 @@ exports.selectCommentsByArticleId = (article_id) => {
     .then((response) => {
       return response.rows;
     });
+};
+
+exports.insertComment = (body, username, article_id) => {
+  return checkArticleIdExists(article_id).then(() => {
+    return checkUserExists(username).then(() => {
+      //default keys are automatically added with default keyword
+      return db
+        .query(
+          `INSERT INTO comments (body, author, article_id, votes, created_at)
+      VALUES 
+      ($1, $2, $3, DEFAULT, DEFAULT)
+      RETURNING *`,
+          [body, username, article_id]
+        )
+        .then((response) => {
+          return response.rows[0];
+        });
+    });
+  });
 };

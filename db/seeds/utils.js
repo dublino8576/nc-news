@@ -32,3 +32,14 @@ exports.checkArticleIdExists = (article_id) => {
       return "Article_id exists";
     });
 };
+
+exports.checkUserExists = (username) => {
+  return db
+    .query(`SELECT * FROM users WHERE username = $1`, [username])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, error: "User not found" });
+      }
+      return "Username exists.";
+    });
+};
