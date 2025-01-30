@@ -138,6 +138,17 @@ describe("GET /api/articles", () => {
         expect(articles).toBeSorted({ key: "author" });
       });
   });
+  test("200: Responds with an array of article objects which are filtered by their topic of interest", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBe(12);
+        articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
   test("404: Responds with an error message of 'Endpoint not found'", () => {
     return request(app)
       .get("/api/article")
@@ -146,15 +157,30 @@ describe("GET /api/articles", () => {
         expect(error).toBe("Endpoint not found");
       });
   });
-});
-
-test('404: Responds with an error of message "Query not found"', () => {
-  return request(app)
-    .get("/api/articles?sort_by=mammino&order=notThis")
-    .expect(404)
-    .then(({ body: { error } }) => {
-      expect(error).toBe("Query not found");
-    });
+  test("404:Responds with an error of message 'Query not found' when order has incorrect value", () => {
+    return request(app)
+      .get("/api/article?order=notThis")
+      .expect(404)
+      .then(({ body: { error } }) => {
+        expect(error).toBe("Endpoint not found");
+      });
+  });
+  test('404: Responds with an error of message "Query not found" when topic has incorrect value', () => {
+    return request(app)
+      .get("/api/articles?topic=notThis")
+      .expect(404)
+      .then(({ body: { error } }) => {
+        expect(error).toBe("Query not found");
+      });
+  });
+  test('404: Responds with an error of message "Query not found" when sort_by has incorrect value', () => {
+    return request(app)
+      .get("/api/articles?sort_by=mammino&order=notThis")
+      .expect(404)
+      .then(({ body: { error } }) => {
+        expect(error).toBe("Query not found");
+      });
+  });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
