@@ -95,6 +95,9 @@ exports.selectCommentsByArticleId = (article_id) => {
 };
 
 exports.insertComment = (body, username, article_id) => {
+  if (!body || typeof body !== "string" || body.length === 0 || !username) {
+    return Promise.reject({ status: 400, error: "Incomplete post body" });
+  }
   return checkArticleIdExists(article_id).then(() => {
     return checkUserExists(username).then(() => {
       //default keys are automatically added with default keyword
@@ -115,6 +118,9 @@ exports.insertComment = (body, username, article_id) => {
 
 exports.patchArticleVotes = (article_id, inc_votes) => {
   return this.selectArticleById(article_id).then((article) => {
+    if (!inc_votes || typeof inc_votes !== "number") {
+      return Promise.reject({ status: 400, error: "Incomplete patch body" });
+    }
     article.votes += inc_votes;
     return article;
   });

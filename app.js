@@ -43,6 +43,10 @@ app.all("*", (request, response) => {
 app.use((error, request, response, next) => {
   if (error.code === "22P02") {
     response.status(400).send({ error: "Wrong data type in the URL" });
+  } else if (error.status === 400 && error.error === "Incomplete post body") {
+    response.status(400).send({ error: "Incomplete post body" });
+  } else if (error.status === 400 && error.error === "Incomplete patch body") {
+    response.status(400).send({ error: "Incomplete patch body" });
   } else {
     next(error);
   }
