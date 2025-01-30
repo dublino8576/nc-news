@@ -34,7 +34,8 @@ exports.getArticles = (request, response, next) => {
   //make a variable for each query and then make a greenlist
   const { sort_by } = request.query;
   const { order } = request.query;
-  return selectArticles(sort_by, order)
+  const { topic } = request.query;
+  return selectArticles(sort_by, order, topic)
     .then((articles) => {
       response.status(200).send({ articles });
     })

@@ -22,7 +22,7 @@ exports.selectArticleById = (article_id) => {
     });
 };
 
-exports.selectArticles = (sort_by, order) => {
+exports.selectArticles = (sort_by, order, topic) => {
   const greenList = [
     "author",
     "title",
@@ -35,6 +35,7 @@ exports.selectArticles = (sort_by, order) => {
     "ASC",
     "DESC",
   ];
+  const filterGreenList = ["mitch", "cats", "paper"];
   let queryArgs = [];
   let sqlQueryString = `SELECT 
     articles.article_id,
@@ -44,20 +45,38 @@ exports.selectArticles = (sort_by, order) => {
     articles.created_at,
     articles.votes,
     articles.article_img_url,
-    COUNT(comments.comment_id)::INTEGER AS comment_count
-FROM 
+    COUNT(comments.comment_id)::INTEGER AS comment_count`;
+  if (topic) {
+    if (filterGreenList.includes(topic)) {
+      sqlQueryString += ` FROM 
     articles
-LEFT JOIN 
+    LEFT JOIN 
     comments
-ON 
+    ON 
     articles.article_id = comments.article_id
-GROUP BY 
+    WHERE articles.topic= '${topic}'
+    GROUP BY 
     articles.article_id`;
+    } else if (!filterGreenList.includes(topic)) {
+      return Promise.reject({ status: 404, error: "Query not found" });
+    }
+  }
+  if (!topic || !filterGreenList.includes(topic)) {
+    sqlQueryString += ` FROM 
+    articles
+    LEFT JOIN 
+    comments
+    ON 
+    articles.article_id = comments.article_id
+    GROUP BY 
+    articles.article_id`;
+  }
+
   if (sort_by) {
     if (greenList.includes(sort_by)) {
       sqlQueryString += ` ORDER BY articles.${sort_by}`;
       queryArgs.push(sort_by);
-    } else {
+    } else if (!greenList.includes(sort_by)) {
       return Promise.reject({ status: 404, error: "Query not found" });
     }
   }
@@ -65,7 +84,7 @@ GROUP BY
     if (greenList.includes(order)) {
       sqlQueryString += ` ${order}`;
       queryArgs.push(order);
-    } else {
+    } else if (!greenList.includes(order)) {
       return Promise.reject({ status: 404, error: "Query not found" });
     }
   }
@@ -75,7 +94,6 @@ GROUP BY
   if (!order) {
     sqlQueryString += ` DESC;`;
   }
-
   return db.query(sqlQueryString).then(({ rows }) => {
     return rows;
   });
