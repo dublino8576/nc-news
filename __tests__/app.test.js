@@ -227,7 +227,31 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(newComment.votes).toBe(0);
       });
   });
-  test("404: Responds with a message of ID number not found", () => {
+  test('400: Responds with an error message of "Incomplete post body"', () => {
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send({
+        body: "",
+        username: "",
+      })
+      .expect(400)
+      .then(({ body: { error } }) => {
+        expect(error).toBe("Incomplete post body");
+      });
+  });
+  test("400: Responds with a message of 'Wrong data type in the URL'", () => {
+    return request(app)
+      .post("/api/articles/notThis/comments")
+      .send({
+        body: "I have to say I find this info interesting!!!",
+        username: "icellusedkars",
+      })
+      .expect(400)
+      .then(({ body: { error } }) => {
+        expect(error).toBe("Wrong data type in the URL");
+      });
+  });
+  test("404: Responds with a message of 'ID number not found'", () => {
     return request(app)
       .post("/api/articles/265/comments")
       .send({
@@ -270,6 +294,15 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(updatedArticle.article_img_url).toBe(
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
         );
+      });
+  });
+  test("400: Responds with a message of 'Incomplete patch body'", () => {
+    return request(app)
+      .patch("/api/articles/7")
+      .expect(400)
+      .send({ hello: 33 })
+      .then(({ body: { error } }) => {
+        expect(error).toBe("Incomplete patch body");
       });
   });
 
