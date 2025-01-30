@@ -74,6 +74,24 @@ describe("GET /api/articles/:article_id", () => {
         );
       });
   });
+  test("200: Responds with an article object that also has the total comment count property", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then((response) => {
+        const { article } = response.body;
+        expect(article.title).toBe("Living in the shadow of a great man");
+        expect(article.topic).toBe("mitch");
+        expect(article.author).toBe("butter_bridge");
+        expect(article.body).toBe("I find this existence challenging");
+        expect(typeof article.created_at).toBe("string");
+        expect(article.votes).toBe(100);
+        expect(article.article_img_url).toBe(
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        );
+        expect(article.comment_count).toBe(11);
+      });
+  });
   test('400: Responds with error message of "Bad request"', () => {
     return request(app)
       .get("/api/articles/notThis")

@@ -12,14 +12,23 @@ exports.selectAllTopics = (request, response, next) => {
 };
 
 exports.selectArticleById = (article_id) => {
-  return db
-    .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
-    .then((response) => {
-      if (response.rows.length === 0) {
-        return Promise.reject({ status: 404, error: "ID number not found" });
-      }
-      return response.rows[0];
-    });
+  return this.selectCommentsByArticleId(article_id).then((response) => {
+    const commentsById = response;
+    return db
+      .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
+      .then((response) => {
+        if (response.rows.length === 0) {
+          return Promise.reject({
+            status: 404,
+            error: "ID number not found",
+          });
+        }
+        const articleById = response.rows[0];
+        articleById.comment_count = commentsById.length;
+
+        return articleById;
+      });
+  });
 };
 
 exports.selectArticles = (sort_by, order, topic) => {
