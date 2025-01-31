@@ -112,7 +112,6 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
           ]
         )
       );
-      console.log(process.env.DATABASE_URL);
       return db.query(insertCommentsQueryStr);
     });
 };
