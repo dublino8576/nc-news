@@ -6,9 +6,9 @@
   "scripts": {
     "start": "node listen.js",
     "setup-dbs": "psql -f ./db/setup.sql",
-    "seed-test": "NODE_ENV=test node ./db/seeds/run-seed.js",
-    "seed-dev": "NODE_ENV=development node ./db/seeds/run-seed.js",
-    "seed-prod": "NODE_ENV=production node ./db/seeds/run-seed.js",
+    "seed-test": "node ./db/seeds/run-seed.js",
+    "seed-dev": "node ./db/seeds/run-seed.js",
+    "seed-prod": "node ./db/seeds/run-seed.js",
     "test": "jest",
     "prepare": "husky install"
   },
