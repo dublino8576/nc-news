@@ -1,32 +1,9 @@
 # Northcoders News API
 
-To be able to run the API (Application Programming Interface) in this repo you will have to allow the connection to take place.
-
-There are 2 databases that you can access, one test database that has all the testing related to the functionalities of the database, and a developer database that doesn't have the tests which the user can interact with safely.
-
-If you only wish to have access to the dev database please follow these steps:
-
-1. Fork this repository on your profile.
-
-2. Open your local terminal in your preferred CLI. Make sure you are in your Home directory and type in the terminal git clone URL-of-your-nc-news-repo.
-
-3. Move inside the main directory of the repository. Remember: your filepath on the terminal should end with /be-nc-news
-
-4. Create a gitignore file that will allow you to store a command. This command will allow you to store an environmental variable to access the commands and run the API on the dev database. The commands are provided in the package.json file under the "script" property. Type touch .env.development to create file.
-
-5. Look at the text file of .env.example in the main directory and get the correct database name in the setup.sql file in the db folder. Enter this into your .env file
-
-6. Once done this please run the command npm i. This will install the packages you need to run this API. To make sure the environment variables are working install dotenv program by typing install dotenv.
-
-If you wish to have access to the test database please follow these steps:
-
-1. Follow steps 1-4 but at step 4 create a file of .env.test and choose on step 5 the correct database name ending in \_test.
-
-# be-nc-news
-
 ## Hosted Version
 
-A live version of this project can be accessed here: [Your Hosted Link]
+A live version of this project can be accessed here: [live Northcoders News API](https://nc-news-with-comments-project.onrender.com)
+You can then add the endpoint to this URL to an API development Platform like Insomnia [download Insomnia](https://insomnia.rest/download) or fetch the result from the GET requests on your browser.
 
 ## Project Summary
 
@@ -46,14 +23,14 @@ Ensure you have the following installed:
 
 ### Installation & Setup
 
-#### 1. Clone the repository
+#### 1. Fork this repo, clone it locally and move inside the root directory
 
 ```bash
 git clone https://github.com/dublino8576/nc-news.git
 cd be-nc-news
 ```
 
-#### 2. Install dependencies
+#### 2. Install the dependencies
 
 ```bash
 npm install
@@ -63,13 +40,13 @@ npm install pg
 npm install pg-format
 ```
 
-These 3 dependencies are essential for both testing and development database to run. **npm install** should load all the dependecies needed but it might be needed to install them manually with those commands.
+These 4 dependencies are essential for both testing and development database to run. **npm install** should load all the dependecies needed but it might be needed to install them manually with those commands.
 
-If you are also running the test database you want to make sure you run the following commands to make sure the dev dependencies are uploaded in your local repository. You can also install husky if you wish to do some contributions as part of your Continuous Integration process when submit a pull request to avoid broken code pushed to the main branch in GitHub.
+If you are also running the test database you want to make sure you run the following commands to make sure the dev dependencies are uploaded in your local repository. You can also install husky with using script "prepare" if you wish to do some contributions as part of your Continuous Integration process when submit a pull request to avoid broken code pushed to the main branch in GitHub.
 
 ```bash
 npm install --save-dev jest
-npm install --save-dev husky
+npm run prepare
 npm install --save-dev jest-sorted
 npm install supertest --save-dev
 
@@ -121,7 +98,7 @@ npm run seed-test
 npm start
 ```
 
-By default, the server will run on `http://localhost:3000/`
+This will run the listen.js file. By default, the server will run on `http://localhost:3000/`
 
 ### Running Tests
 
