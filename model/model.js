@@ -148,8 +148,18 @@ exports.patchArticleVotes = (article_id, inc_votes) => {
     if (!inc_votes || typeof inc_votes !== "number") {
       return Promise.reject({ status: 400, error: "Incomplete patch body" });
     }
-    article.votes += inc_votes;
-    return article;
+    return db
+      .query(
+        `
+      UPDATE articles
+      SET votes = votes + $1
+      WHERE article_id = $2
+      RETURNING *;`,
+        [inc_votes, article_id]
+      )
+      .then((response) => {
+        return response.rows[0];
+      });
   });
 };
 
