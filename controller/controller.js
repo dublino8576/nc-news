@@ -37,6 +37,7 @@ exports.getArticles = (request, response, next) => {
   const { topic } = request.query;
   return selectArticles(sort_by, order, topic)
     .then((articles) => {
+      console.log(articles, "articles");
       response.status(200).send({ articles });
     })
     .catch((err) => {
