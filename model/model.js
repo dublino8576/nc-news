@@ -44,7 +44,14 @@ exports.selectArticles = (sort_by, order, topic) => {
     "ASC",
     "DESC",
   ];
-  const filterGreenList = ["mitch", "cats", "paper"];
+  const filterGreenList = [
+    "mitch",
+    "cats",
+    "paper",
+    "football",
+    "cooking",
+    "coding",
+  ];
   let queryArgs = [];
   let sqlQueryString = `SELECT 
     articles.article_id,
@@ -103,6 +110,7 @@ exports.selectArticles = (sort_by, order, topic) => {
   if (!order) {
     sqlQueryString += ` DESC;`;
   }
+
   return db.query(sqlQueryString).then(({ rows }) => {
     return rows;
   });
